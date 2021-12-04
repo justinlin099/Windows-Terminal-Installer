@@ -32,6 +32,8 @@ $label2.Text = "Please select the version you want to install"
 $label2.Font = New-Object System.Drawing.Font("Arial", 9)
 $main_window.Controls.Add($label2)
 
+[System.Windows.Forms.Application]::EnableVisualStyles()
+
 #Add WTStable Button
 Invoke-WebRequest https://raw.githubusercontent.com/justinlin099/Windows-Terminal-Installer/main/Images/WTIMG.png -Out WTInstaller\WTIMG.png
 $wtimg = [System.Drawing.Image]::Fromfile("WTInstaller\WTIMG.png")
@@ -43,6 +45,7 @@ $WTStable.Font = New-Object System.Drawing.Font("Arial", 9)
 $WTStable.Padding = New-Object System.Windows.Forms.Padding(5)
 $WTStable.Image = $wtimg
 $WTStable.TextAlign = 'BottomLeft'
+$WTStable.FlatStyle = 'Standard'
 $main_window.Controls.Add($WTStable)
 
 #Add WTPre Button
@@ -56,6 +59,7 @@ $WTPre.Font = New-Object System.Drawing.Font("Arial", 9)
 $WTPre.Padding = New-Object System.Windows.Forms.Padding(5)
 $WTPre.Image = $wtpimg
 $WTPre.TextAlign = 'BottomLeft'
+$WTPre.FlatStyle = 'Standard'
 $main_window.Controls.Add($WTPre)
 
 #Show Window
