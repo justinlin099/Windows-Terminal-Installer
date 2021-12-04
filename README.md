@@ -1,4 +1,5 @@
-![image](https://user-images.githubusercontent.com/61717681/144710278-d54badd4-c33e-4742-b785-6d1cdbb5bb41.png)
+![RepoHeader](https://user-images.githubusercontent.com/61717681/144710529-880f1738-fc2c-41b1-883e-3aa6e7c2c9d3.png)
+
 
 # Windows-Terminal-Installer
 Download and deploy latest Windows Terminal release from github
@@ -8,8 +9,7 @@ A Windows Terminal Install PS Script
 ## How to Install 如何安裝
 
 Installation Step:
-1.Download the Script from [Releases
-page](https://github.com/justinlin099/Windows-Terminal-Installer/releases).
+1.Download the Script from [Releases page](https://github.com/justinlin099/Windows-Terminal-Installer/releases).
 2.Right-Click on the file and choose "Run with PowerShell"
 3.Select the version you want to Install (Stable/Preview)
 
