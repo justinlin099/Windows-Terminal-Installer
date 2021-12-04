@@ -2,6 +2,13 @@
 
 Write-Host Windows Terminal Installer GUI by Justin Lin
 
+Write-Host Checking Windows Version...
+$WinVersion = (Get-ComputerInfo).WindowsVersion
+if ($WinVersion -lt 1903){
+    [System.Windows.Forms.MessageBox]::Show("You are running Windows Version "+$WinVersion+" ,The minimal requirement is version 1903. Please update your Windows and try again." , "Please update your Windows")
+    break
+}
+
 #Create Temp Folder
 New-Item -Name "WTInstaller" -ItemType "directory"
 
