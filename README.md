@@ -1,8 +1,8 @@
 ![RepoHeader](https://user-images.githubusercontent.com/61717681/144710529-880f1738-fc2c-41b1-883e-3aa6e7c2c9d3.png)
 
 
-# Windows Terminal Installer Windows 終端機安裝程式
-## Windows 終端機安裝程式
+# Windows Terminal Installer ## Windows 終端機安裝程式
+
 Download and deploy latest Windows Terminal release from github
 
 A Windows Terminal Install PS Script
