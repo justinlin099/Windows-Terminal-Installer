@@ -5,7 +5,7 @@ Download and deploy latest Windows Terminal release from github
 
 A Windows Terminal Install PS Script
 
-##How to Install 如何安裝
+## How to Install 如何安裝
 
 Installation Step:
 1.Download the Script from [Releases
