@@ -2,10 +2,10 @@
 
 Write-Host Windows Terminal Installer GUI by Justin Lin
 
-#建立檔案暫存資料夾
+#Create Temp Folder
 New-Item -Name "WTInstaller" -ItemType "directory"
 
-#建立Windows Forms視窗
+#Create Windows Forms Window
 Add-Type -assembly System.Windows.Forms
 $main_window = New-Object System.Windows.Forms.Form
 $main_window.Text = "Windows Terminal Installer"
@@ -13,11 +13,12 @@ Invoke-WebRequest https://raw.githubusercontent.com/justinlin099/Windows-Termina
 $icon = New-Object system.drawing.icon ("WTInstaller\icon.ico")
 $main_window.Icon = $icon
 $main_window.Width = 600
-$main_window.Height =425
+$main_window.Height =440
 $main_window.FormBorderStyle = 'FixedSingle'
 $main_window.MaximizeBox = $false
+$main_window.StartPosition = "CenterScreen"
 
-#UI Elements
+#UI Label Elements
 $label1 = New-Object System.Windows.Forms.Label
 $label1.Location = New-Object System.Drawing.point(30,30)
 $label1.Size = New-Object System.Drawing.Size(356,34)
@@ -31,6 +32,13 @@ $label2.Size = New-Object System.Drawing.Size(247,16)
 $label2.Text = "Please select the version you want to install"
 $label2.Font = New-Object System.Drawing.Font("Arial", 9)
 $main_window.Controls.Add($label2)
+
+$label3 = New-Object System.Windows.Forms.Label
+$label3.Location = New-Object System.Drawing.point(33,367)
+$label3.Size = New-Object System.Drawing.Size(500,16)
+$label3.Text = "Ready to Install"
+$label3.Font = New-Object System.Drawing.Font("Arial", 9)
+$main_window.Controls.Add($label3)
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
@@ -47,6 +55,47 @@ $WTStable.Image = $wtimg
 $WTStable.TextAlign = 'BottomLeft'
 $WTStable.FlatStyle = 'Standard'
 $main_window.Controls.Add($WTStable)
+$WTStable.Add_Click(
+    {
+        #Download and deploy latest Windows Terminal release from github
+
+        Write-Host Windows Terminal Installer by Justin Lin V1.00
+
+        $WTStable.Enabled = $false
+        $WTPre.Enabled = $false
+        $label3.Text = "Loading latest stable version"
+        $repo = "microsoft/terminal"
+        $releases = "https://api.github.com/repos/$repo/releases"
+        $taglst = (Invoke-WebRequest $releases | ConvertFrom-Json).tag_name
+        $prereleaselst = (Invoke-WebRequest $releases | ConvertFrom-Json).prerelease
+
+        for (($i = 0); $i -lt $prereleaselst.count ; $i++ )
+        {
+	        if ($prereleaselst[$i] -match "False"){
+		        $stablereleaseindex = $i
+		        break
+	        }
+        }
+
+        $tag = $taglst[$stablereleaseindex]
+        $file =  "Microsoft.WindowsTerminal_"+$tag.Remove(0,1)+"_8wekyb3d8bbwe.msixbundle"
+        $downloadpath = "https://github.com/$repo/releases/download/$tag/$file"
+
+        $label3.Text = "Downloading Latest Version of Windows Terminal"
+        Write-Host Downloading Latest Version of Windows Terminal
+        Invoke-WebRequest $downloadpath -Out WTInstaller/$file
+
+        $label3.Text = "Installing Windows Terminal $tag"
+        Write-Host Installing Windows Terminal $tag
+        Add-AppxPackage -Path WTInstaller/$file
+
+        #Complete Message
+        $label3.Text = "Installation Complete"
+        [System.Windows.Forms.MessageBox]::Show("Windows Terminal "+$tag+" has been successfully installed on your computer." , "Installation Complete")
+        $WTStable.Enabled = $true
+        $WTPre.Enabled = $true
+    }
+)
 
 #Add WTPre Button
 Invoke-WebRequest https://raw.githubusercontent.com/justinlin099/Windows-Terminal-Installer/main/Images/WTPIMG.png -Out WTInstaller\WTPIMG.png
@@ -61,6 +110,53 @@ $WTPre.Image = $wtpimg
 $WTPre.TextAlign = 'BottomLeft'
 $WTPre.FlatStyle = 'Standard'
 $main_window.Controls.Add($WTPre)
+$WTPre.Add_Click(
+    {
+        #Download and deploy latest Windows Terminal prerelease from github
+
+        Write-Host Windows Terminal Installer by Justin Lin V1.00
+
+        $WTStable.Enabled = $false
+        $WTPre.Enabled = $false
+        $label3.Text = "Loading latest preview version"
+        $repo = "microsoft/terminal"
+        $releases = "https://api.github.com/repos/$repo/releases"
+        $taglst = (Invoke-WebRequest $releases | ConvertFrom-Json).tag_name
+        $prereleaselst = (Invoke-WebRequest $releases | ConvertFrom-Json).prerelease
+
+        for (($i = 0); $i -lt $prereleaselst.count ; $i++ )
+        {
+	        if ($prereleaselst[$i] -match "True"){
+		        $prereleaseindex = $i
+		        break
+	        }
+        }
+
+        $tag = $taglst[$prereleaseindex]
+        $file =  "Microsoft.WindowsTerminalPreview_"+$tag.Remove(0,1)+"_8wekyb3d8bbwe.msixbundle"
+        $downloadpath = "https://github.com/$repo/releases/download/$tag/$file"
+
+        $label3.Text = "Downloading Latest Version of Windows Terminal Preview"
+        Write-Host Downloading Latest Version of Windows Terminal Preview
+        Invoke-WebRequest $downloadpath -Out WTInstaller/$file
+
+        $label3.Text = "Installing Windows Terminal Preview $tag"
+        Write-Host Installing Windows Terminal Preview $tag
+        Add-AppxPackage -Path WTInstaller/$file
+
+        #Complete Message
+        $label3.Text = "Installation Complete"
+        [System.Windows.Forms.MessageBox]::Show("Windows Terminal Preview "+$tag+" has been successfully installed on your computer." , "Installation Complete")
+        $WTStable.Enabled = $true
+        $WTPre.Enabled = $true
+    }
+)
+
 
 #Show Window
 $main_window.ShowDialog()
+
+
+$wtimg.Dispose()
+$wtpimg.Dispose()
+Remove-Item 'WTInstaller\' -Recurse -Force
