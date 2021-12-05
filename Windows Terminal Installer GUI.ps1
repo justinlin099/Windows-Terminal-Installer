@@ -9,6 +9,13 @@ if ($WinVersion -lt 1903){
     break
 }
 
+Write-Host Checking Your Internet Connection...
+if (((Test-NetConnection www.google.com -Port 80 -InformationLevel "Detailed").TcpTestSucceeded) -eq $false)
+{ 
+    [System.Windows.Forms.MessageBox]::Show("This Installer Script Requires Internet Connection, Please check your Internet status and try again." , "Please check your Internet conncetion")
+    break
+}
+
 #Create Temp Folder
 New-Item -Name "WTInstaller" -ItemType "directory"
 
